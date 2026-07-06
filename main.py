@@ -366,19 +366,20 @@ def pg_equip_nov():
     global df_equip_nov
     st.header("✨ Equipement Novice") 
     df = df_equip_nov
-    df_equip_nov
-    lambda_steps = lambda x: str(x['Step']) + '.' + str(x['Stars'])
-    lambda_name_ver = lambda x: (str(x['Name']).split(" ", 1)[0],str(str(x['Name'])+" ").split(" ", 1)[1])
-    df['Steps'] = df.apply(lambda_steps, axis=1)
-    df[['Category','Stage']]=df.apply(lambda_name_ver,axis=1, result_type='expand')    
-    opt_cat = obj_multiselect(df,'Category')
-    df_g=df[['Step','Cost']].set_index('Step').groupby("Step").sum()
-    df_g.index.name = 'Idx'
-    df_g['Step']=df_g.apply(lambda x: x.index)
-    range_level_min, range_level_max = build_chart_bar(df_g,'Step','Cost','Costs from level:',int(df['Step'].min()),int(df['Step'].max()),with_slider=True, with_switch=False)
-    with st.expander('Données du graphique', expanded=False, width="stretch"):
-        df_filter=df.loc[(df['Step'] >= range_level_min) & (df['Step'] <= range_level_max) & (df["Category"].isin(opt_cat))]
-        build_table_any(df_filter[['Step','Name','Stars','Cost']])
+    build_table_any(df_equip_nov)
+    if 1 == 2:
+        lambda_steps = lambda x: str(x['Step']) + '.' + str(x['Stars'])
+        lambda_name_ver = lambda x: (str(x['Name']).split(" ", 1)[0],str(str(x['Name'])+" ").split(" ", 1)[1])
+        df['Steps'] = df.apply(lambda_steps, axis=1)
+        df[['Category','Stage']]=df.apply(lambda_name_ver,axis=1, result_type='expand')    
+        opt_cat = obj_multiselect(df,'Category')
+        df_g=df[['Step','Cost']].set_index('Step').groupby("Step").sum()
+        df_g.index.name = 'Idx'
+        df_g['Step']=df_g.apply(lambda x: x.index)
+        range_level_min, range_level_max = build_chart_bar(df_g,'Step','Cost','Costs from level:',int(df['Step'].min()),int(df['Step'].max()),with_slider=True, with_switch=False)
+        with st.expander('Données du graphique', expanded=False, width="stretch"):
+            df_filter=df.loc[(df['Step'] >= range_level_min) & (df['Step'] <= range_level_max) & (df["Category"].isin(opt_cat))]
+            build_table_any(df_filter[['Step','Name','Stars','Cost']])
 
 def pg_boss():
     global df_costs_boss
