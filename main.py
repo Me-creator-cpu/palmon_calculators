@@ -134,6 +134,58 @@ def build_chart_bar(df_chart,xField,yField,sLabel,selMin=1,selMax=30,with_slider
             st.markdown(f":orange-badge[{total_col} : {int(df[yField].sum())}]")
             return selMin,selMax
 
+def build_table_any(df):
+    st.dataframe(
+        df,
+        column_config={
+            "Cost": st.column_config.NumberColumn(
+                "Costs",
+                min_value=0,
+                max_value=10000000,
+                step=1,
+                format="compact",
+            ),
+            "Unit cost": st.column_config.NumberColumn(format="compact"),
+            "Total": st.column_config.NumberColumn(format="compact"),
+        },
+        hide_index=True,
+     )
+
+def build_table_full_costs(df_src):
+    df=df_src.copy()
+    df['Cost type']=df['Cost type'].apply(lambda b: option_values[data_values['Value'].index(b)]+' '+b)
+    st.dataframe(
+            df,
+            column_config={
+                "Cost type": st.column_config.TextColumn(
+                    "Cost type",
+                ),                
+                "Cost": st.column_config.NumberColumn(
+                    "Costs",
+                    min_value=0,
+                    max_value=10000000,
+                    step=1,
+                    format="compact",
+                ),
+            },
+            hide_index=True,
+         ) 
+
+def menu_tab_val():
+    global
+    rowval = st.columns(2,border=False, width="stretch")
+    with rowval[0]:
+        st.subheader('Val') 
+        build_table_full_costs(df_costs_mut_full)
+    with rowval[1]:
+        st.subheader('Stars')
+        df_stars=df_costs_stars.copy(deep=True)
+        df_stars = df_stars[:-1]
+        df_stars['Stars level']=df_stars['Stars level'].apply(lambda b: format_stars(b) )
+        df_stars.at['Total','Unit Cost']=df_stars['Unit Cost'].mean()
+        df_stars.at['Total','Total']=df_stars['Total'].sum()
+        df_stars.at['Total','Stars level']='Average / Total'
+        build_table_any(df_stars) 
 
 df_costs_exp = read_csv('data/ps_pal_costs.csv')
 df_costs_comp = read_csv('data/ps_pal_comp_costs.csv')
@@ -144,12 +196,15 @@ df_costs_boss = read_csv('data/ps_boss_costs.csv')
 df_equip_data = read_csv('data/ps_equip_costs.csv')
 df_equip_nov = read_csv('data/ps_equip_nov_costs.csv')
 
-df_costs_exp
-df_costs_comp
-df_costs_mut
-df_costs_mut_full
-df_costs_stars
-df_costs_boss
-df_equip_data
-df_equip_nov
+menu_tab_val()
+
+if 1 == 2:
+    df_costs_exp
+    df_costs_comp
+    df_costs_mut
+    df_costs_mut_full
+    df_costs_stars
+    df_costs_boss
+    df_equip_data
+    df_equip_nov
 
