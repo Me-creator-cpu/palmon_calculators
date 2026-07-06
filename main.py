@@ -187,7 +187,7 @@ def menu_tab_val():
     with rowval[1]:
         st.subheader('Stars')
         df_stars=df_costs_stars.copy(deep=True)
-        df_stars = df_stars[:-1]
+        #df_stars = df_stars[:-1]
         df_stars['Stars']=df_stars['Stars'].apply(lambda b: format_stars(b) )
         df_stars.at['Total','Unit cost']=df_stars['Unit cost'].mean()
         df_stars.at['Total','Total']=df_stars['Total'].sum()
