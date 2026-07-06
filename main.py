@@ -84,7 +84,7 @@ def percent_format(value):
 
 def read_csv(file):
     try:
-        df = pd.read_csv('data.csv')
+        df = pd.read_csv(file)
     except:
         df = None
     return df
