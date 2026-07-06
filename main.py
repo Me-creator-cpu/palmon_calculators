@@ -81,6 +81,12 @@ def percent_format(value):
     except:
         return empty()
 
+def format_stars(x): #⭐
+    try:
+        return ("⭐" * int(x))[0:int(x)]
+    except:
+        return x
+        
 def read_csv(file):
     try:
         df = pd.read_csv(file)
