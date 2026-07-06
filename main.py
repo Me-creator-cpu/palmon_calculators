@@ -366,7 +366,7 @@ def pg_equip_nov():
     global df_equip_nov
     st.header("✨ Equipement Novice") 
     df = df_equip_nov
-    
+    df_equip_nov
     lambda_steps = lambda x: str(x['Step']) + '.' + str(x['Stars'])
     lambda_name_ver = lambda x: (str(x['Name']).split(" ", 1)[0],str(str(x['Name'])+" ").split(" ", 1)[1])
     df['Steps'] = df.apply(lambda_steps, axis=1)
