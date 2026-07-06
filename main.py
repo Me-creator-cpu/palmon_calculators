@@ -89,4 +89,5 @@ def read_csv(file):
         df = None
     return df
 
-read_csv('data/ps_pal_costs.csv')
+df = read_csv('data/ps_pal_costs.csv')
+df
