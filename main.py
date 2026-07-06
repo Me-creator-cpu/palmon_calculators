@@ -443,11 +443,12 @@ st.set_page_config(
 )
 
 with st.sidebar:
-    top_nav = top_nav = st.toggle('Top menu', False)
+    #top_nav = top_nav = st.toggle('Top menu', False)
     nav_sections = st.toggle('Menu avec rubriques', True)
     
 pg = st.navigation(
     pages if nav_sections else [page for section in pages.values() for page in section],
-    position="top" if top_nav else "sidebar"
+    #position="top" if top_nav else "sidebar"
+    position="sidebar"
 )
 pg.run() 
