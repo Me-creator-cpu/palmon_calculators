@@ -86,7 +86,30 @@ def format_stars(x): #⭐
         return ("⭐" * int(x))[0:int(x)]
     except:
         return x
+
+def str2number(val):
+    try:
+        t=str(val).replace(' ','')
+        return int(t)
+    except:
+        return int(0)
         
+def del_session_variable(var_key):
+    try:
+        del st.session_state[var_key]
+    except:
+        return None
+
+def add_session_variable(var_key,var_value):
+    del_session_variable(var_key)
+    st.session_state[var_key]=var_value
+
+def get_session_variable(var_key):
+    try:
+        return st.session_state[var_key]
+    except:
+        return None
+
 def read_csv(file):
     try:
         df = pd.read_csv(file)
@@ -122,6 +145,14 @@ def get_upgrade_comp_costs(from_lvl=1,to_lvl=30):
     else:
         return None
 
+def obj_row(nb_cells=2,with_border=False):
+    return st.columns(nb_cells,border=with_border, width="stretch")
+
+def obj_multiselect(df,column):
+    return st.multiselect(f"Filter values for {column}:", 
+                          df[column].unique(), 
+                          default=list(df[column].unique()))    
+    
 def build_chart_bar(df_chart,xField,yField,sLabel,selMin=1,selMax=30,with_slider=True, with_switch=False):
     if df_chart is not None:
         switch_axis = False
@@ -206,7 +237,10 @@ def build_table_full_costs(df_src):
             hide_index=True,
          ) 
 
-def menu_tab_val():
+def pg_home():
+    st.title(f"{app_title}")
+    
+def pg_total_costs():
     global df_costs_mut_full,df_stars
     rowval = st.columns(2,border=False, width="stretch")
     with rowval[0]:
@@ -221,17 +255,161 @@ def menu_tab_val():
         df_stars.at['Total','Total']=df_stars['Total'].sum()
         df_stars.at['Total','Stars']='Average / Total'
         build_table_any(df_stars) 
+def pg_comp():
+    global df_costs_comp
+    st.subheader('Compétences')
+    
+    df = df_costs_comp
+    range_level_min, range_level_max = build_chart_bar(df,'Level from','Cost','Coûts depuis le niveau:',int(1),int(30))
 
+    #df_pal=get_df_idx(idx_palmon)
+    with st.container(horizontal_alignment="center", 
+                      vertical_alignment="center", 
+                      border=True):
+        nb_pal=st.slider('Nb Palmons', min_value=1, max_value=7, value=1, step=1)
+        cost_unit=calcul_upgrade_comp_costs(from_lvl=range_level_min,to_lvl=range_level_max,formated=False)
+        #st.write(cost_unit)
+        # 200 / 80 / 40
+        even_ratio=st.selectbox("Points ratio", [200,80,40])
+        event_points=int(cost_unit)*int(even_ratio)
+        cost_nb=int(cost_unit)*int(nb_pal)
+        event_points_nb=int(cost_nb)*int(even_ratio)
+        row1 = st.columns(3,border=False, width="stretch")
+        row2 = st.columns(3,border=False, width="stretch")
+        row3 = st.columns(3,border=False, width="stretch")
+        with row1[0]:
+            st.write(f"Coût évolution pour {nb_pal}:")
+        with row1[1]:
+            st.write(large_num_format(cost_nb))
+        with row2[0]:
+            st.write(f"Points événement:")
+        with row2[1]:    
+            st.write(large_num_format(event_points))
+        with row3[0]:
+            st.write(f"Points événement pour {nb_pal}:")
+        with row3[1]:
+            st.write(large_num_format(event_points_nb))
+
+    with st.expander('Données du graphique', expanded=False, width="stretch"):
+        build_table_any(df.loc[(df['Level from'] >= range_level_min) & (df['Level from'] <= range_level_max)])
+
+def pg_costs():
+    global df_costs_comp, df_costs_exp
+    df = df_costs_exp
+    df_pal=df_costs_exp
+    st.subheader('Evolution')
+    min_upg=df_pal.loc[(df_pal["Level"] >= 1)]["Level"].min()
+    max_upg=df.loc[(df["Cost"] >= 1)]["Level to"].max()
+    range_level_min, range_level_max = build_chart_bar(df,'Level from','Cost','Coût depuis le niveau:',int(min_upg),int(max_upg))
+    with st.container(horizontal_alignment="center", 
+                      vertical_alignment="center", 
+                      border=True):
+        nb_pal=st.slider('Nb palmons', min_value=1, max_value=7, value=1, step=1)
+        cost_unit=calcul_upgrade_costs(from_lvl=range_level_min,to_lvl=range_level_max)
+        event_points=int(cost_unit)/int(2000)
+        cost_nb=int(cost_unit)*int(nb_pal)
+        event_points_nb=int(cost_nb)/int(2000)
+        row1 = st.columns(3,border=False, width="stretch")
+        row2 = st.columns(3,border=False, width="stretch")
+        row3 = st.columns(3,border=False, width="stretch")
+        with row1[0]:
+            st.write(f"Coût évolution pour {nb_pal} UR:")
+        with row1[1]:
+            st.write(large_num_format(cost_nb))
+        with row2[0]:
+            st.write(f"Points événement:")
+        with row2[1]:    
+            if event_points>=int(15000):
+                st.markdown(f':green[{large_num_format(event_points)}]')
+            else:
+                st.write(large_num_format(event_points))
+        with row3[0]:
+            st.write(f"Points événement pour {nb_pal} UR:")
+        with row3[1]:
+            if event_points_nb>=int(15000):
+                st.markdown(f':green[{large_num_format(event_points_nb)}]')
+            else:
+                st.write(large_num_format(event_points_nb))
+        
+    with st.expander('Données du graphique', expanded=False, width="stretch"):
+        build_table_any(df.loc[(df['Level from'] >= range_level_min) & (df['Level to'] <= range_level_max)])    
+
+def pg_mut():
+    global df_costs_mut
+    st.header('Mutation') 
+    df = df_costs_mut
+    df_energy=df_costs_mut[(df['Step'] != 0)]
+    df_energy=df_energy.groupby(['Level']).sum()
+    df_energy.reset_index(level=0, inplace=True)
+    df_crystal=df.loc[(df['Step'] == 0)]  
+    st.subheader("🟢Energy")
+    range_level_min, range_level_max = build_chart_bar(df_energy,'Level','Cost level','Coût mutation entre:',int(df_energy['Level'].min()),int(df_energy['Level'].max()))
+    st.subheader("💎Crystals")
+    df_crystal=df_crystal.loc[(df['Level'] >= range_level_min) & (df['Level'] <= range_level_max)]
+    build_chart_bar(df_crystal,'Level','Cost level','Coût mutation entre:',int(df_crystal['Level'].min()),int(df_crystal['Level'].max()),False)
+    with st.expander('Données du graphique', expanded=False, width="stretch"):
+        st.subheader("🟢Energy", divider="green")
+        build_table_any(df_energy.loc[(df['Level'] >= range_level_min) & (df['Level'] <= range_level_max)])
+        st.subheader("💎Crystals", divider="blue")
+        build_table_any(df_crystal.loc[(df['Level'] >= range_level_min) & (df['Level'] <= range_level_max)])        
+
+def pg_equip():
+    global df_equip_data
+    st.header("✨ Equipement") 
+    df = df_equip_data
+    range_level_min, range_level_max = build_chart_bar(df,'Level','Opus pearls','Costs from level:',int(df['Level'].min()),int(df['Level'].max()),with_slider=True, with_switch=False)
+    with st.expander('Données du graphique', expanded=False, width="stretch"):
+        build_table_any(df.loc[(df['Level'] >= range_level_min) & (df['Level'] <= range_level_max)])
+
+def pg_equip_nov():
+    global df_equip_nov
+    st.header("✨ Equipement Novice") 
+    df = df_equip_nov
+    
+    lambda_steps = lambda x: str(x['Step']) + '.' + str(x['Stars'])
+    lambda_name_ver = lambda x: (str(x['Name']).split(" ", 1)[0],str(str(x['Name'])+" ").split(" ", 1)[1])
+    df['Steps'] = df.apply(lambda_steps, axis=1)
+    df[['Category','Stage']]=df.apply(lambda_name_ver,axis=1, result_type='expand')    
+    opt_cat = obj_multiselect(df,'Category')
+    df_g=df[['Step','Cost']].set_index('Step').groupby("Step").sum()
+    df_g.index.name = 'Idx'
+    df_g['Step']=df_g.apply(lambda x: x.index)
+    range_level_min, range_level_max = build_chart_bar(df_g,'Step','Cost','Costs from level:',int(df['Step'].min()),int(df['Step'].max()),with_slider=True, with_switch=False)
+    with st.expander('Données du graphique', expanded=False, width="stretch"):
+        df_filter=df.loc[(df['Step'] >= range_level_min) & (df['Step'] <= range_level_max) & (df["Category"].isin(opt_cat))]
+        build_table_any(df_filter[['Step','Name','Stars','Cost']])
+
+
+
+app_title='Calculateur Palmons'
+
+st.set_page_config(
+    page_title=app_title,
+    page_icon="🧊",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+#Evolutions
 df_costs_exp = read_csv('data/ps_pal_costs.csv')
+
+#Compétences
 df_costs_comp = read_csv('data/ps_pal_comp_costs.csv')
+
+#Mutation
 df_costs_mut = read_csv('data/ps_pal_mut_steps_costs.csv')
-df_costs_mut_full = read_csv('data/ps_pal_mut_costs.csv')
-df_costs_stars = read_csv('data/ps_pal_stars_costs.csv')
+
 df_costs_boss = read_csv('data/ps_boss_costs.csv')
+
+#Equipement
 df_equip_data = read_csv('data/ps_equip_costs.csv')
 df_equip_nov = read_csv('data/ps_equip_nov_costs.csv')
 
-#menu_tab_val()
+# Coûts totaux
+df_costs_mut_full = read_csv('data/ps_pal_mut_costs.csv')
+df_costs_stars = read_csv('data/ps_pal_stars_costs.csv')
+
+#pg_total_costs()
 
 if 1 == 2:
     df_costs_exp
@@ -243,3 +421,27 @@ if 1 == 2:
     df_equip_data
     df_equip_nov
 
+pages = {
+    'Home':[ 
+        st.Page(pg_home, title='Home', icon="🏠"),
+    ],
+    'Calculateurs':[ 
+        st.Page(pg_costs, title='Evolution',icon="🗂️"),
+        st.Page(pg_comp, title='Compétences',icon="📊"),
+        st.Page(pg_mut, title='Mutation',icon="📊"),
+    ],
+    'Données':[ 
+        st.Page(pg_equip, title='Equipement',icon="🗂️"),
+        st.Page(pg_equip_nov, title='Equipement novice',icon="🗂️"),
+        st.Page(pg_total_costs, title='Coûts totaux', icon="🔐"),
+    ],
+}
+with st.sidebar:
+    top_nav = 'Top menu'
+    nav_sections = 'Menu avec rubriques'
+    
+pg = st.navigation(
+    pages if nav_sections else [page for section in pages.values() for page in section],
+    position="top" if top_nav else "sidebar"
+)
+pg.run() 
