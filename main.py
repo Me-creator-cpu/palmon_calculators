@@ -356,7 +356,7 @@ def pg_mut():
 
 def pg_equip():
     global df_equip_data
-    st.header("✨ Equipement") 
+    st.header("✨ Equipement Palmon") 
     df = df_equip_data
     range_level_min, range_level_max = build_chart_bar(df,'Level','Opus pearls','Costs from level:',int(df['Level'].min()),int(df['Level'].max()),with_slider=True, with_switch=False)
     with st.expander('Données du graphique', expanded=False, width="stretch"):
@@ -393,15 +393,6 @@ def pg_boss():
         build_table_any(df_boss)
 
 
-app_title='Calculateur Palmons'
-
-st.set_page_config(
-    page_title=app_title,
-    page_icon="🧊",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
 #Evolutions
 df_costs_exp = read_csv('data/ps_pal_costs.csv')
 
@@ -422,18 +413,6 @@ df_equip_nov = read_csv('data/ps_equip_nov_costs.csv')
 df_costs_mut_full = read_csv('data/ps_pal_mut_costs.csv')
 df_costs_stars = read_csv('data/ps_pal_stars_costs.csv')
 
-#pg_total_costs()
-
-if 1 == 2:
-    df_costs_exp
-    df_costs_comp
-    df_costs_mut
-    df_costs_mut_full
-    df_costs_stars
-    df_costs_boss
-    df_equip_data
-    df_equip_nov
-
 pages = {
     'Home':[ 
         st.Page(pg_home, title='Home', icon="🏠"),
@@ -450,9 +429,19 @@ pages = {
         st.Page(pg_total_costs, title='Coûts totaux', icon="🔐"),
     ],
 }
+
+app_title='Calculateur Palmons'
+
+st.set_page_config(
+    page_title=app_title,
+    page_icon="🧊",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
 with st.sidebar:
-    top_nav = 'Top menu'
-    nav_sections = 'Menu avec rubriques'
+    top_nav = top_nav = st.toggle('Top menu', False)
+    nav_sections = st.toggle('Menu avec rubriques', True)
     
 pg = st.navigation(
     pages if nav_sections else [page for section in pages.values() for page in section],
