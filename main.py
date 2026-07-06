@@ -379,6 +379,16 @@ def pg_equip_nov():
         df_filter=df.loc[(df['Step'] >= range_level_min) & (df['Step'] <= range_level_max) & (df["Category"].isin(opt_cat))]
         build_table_any(df_filter[['Step','Name','Stars','Cost']])
 
+def pg_boss():
+    global df_costs_boss
+    rowval = st.columns(2,border=False, width="stretch")
+    with rowval[0]:
+        df=df_costs_boss
+        st.subheader('Boss') 
+        df_boss=df.copy(deep=True)
+        df_boss['Stars']=df_boss['Stars'].apply(lambda b: format_stars(b) )
+        df_boss['Total']=df_boss['Unit cost'].apply(lambda b: int(b)*int(5) )
+        build_table_any(df_boss)
 
 
 app_title='Calculateur Palmons'
@@ -399,6 +409,7 @@ df_costs_comp = read_csv('data/ps_pal_comp_costs.csv')
 #Mutation
 df_costs_mut = read_csv('data/ps_pal_mut_steps_costs.csv')
 
+#Boss
 df_costs_boss = read_csv('data/ps_boss_costs.csv')
 
 #Equipement
@@ -433,6 +444,7 @@ pages = {
     'Données':[ 
         st.Page(pg_equip, title='Equipement',icon="🗂️"),
         st.Page(pg_equip_nov, title='Equipement novice',icon="🗂️"),
+        st.Page(pg_boss, title='Boss',icon="🗂️"),
         st.Page(pg_total_costs, title='Coûts totaux', icon="🔐"),
     ],
 }
