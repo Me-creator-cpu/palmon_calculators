@@ -94,6 +94,36 @@ def read_csv(file):
         df = None
     return df
 
+def calcul_upgrade_costs(from_lvl=1,to_lvl=300):
+    global df_costs_exp
+    df=df_costs_exp.copy(deep=True)
+    if df is not None:
+        val_cost=df.loc[(df["Level from"] >= from_lvl) & (df["Level from"] <= to_lvl)]["Cost"].sum()
+        return val_cost
+    else:
+        return None
+
+def calcul_upgrade_comp_costs(from_lvl=1,to_lvl=30,formated=True):
+    if get_df_idx(idx_palmon) is not None:
+        #df = df_xls["DataFrame"][idx_comp]
+        #val_cost=df.loc[(df["Level from"] >= from_lvl) & (df["Level from"] <= to_lvl)]["Cost"].sum()
+        val_cost=get_upgrade_comp_costs(from_lvl,to_lvl)
+        if formated:
+            return large_num_format(val_cost)
+        else:
+            return val_cost
+    else:
+        return None
+
+def get_upgrade_comp_costs(from_lvl=1,to_lvl=30):
+    df=get_df_idx(idx_comp)
+    if df is not None:
+        val_cost=df.loc[(df["Level from"] >= from_lvl) & (df["Level from"] <= to_lvl)]["Cost"].sum()
+        return int(val_cost)
+    else:
+        return None
+
+
 def build_chart_bar(df_chart,xField,yField,sLabel,selMin=1,selMax=30,with_slider=True, with_switch=False):
     if df_chart is not None:
         switch_axis = False
