@@ -255,10 +255,11 @@ def pg_total_costs():
         df_stars.at['Total','Total']=df_stars['Total'].sum()
         df_stars.at['Total','Stars']='Average / Total'
         build_table_any(df_stars) 
+        
 def pg_comp():
     global df_costs_comp
     st.subheader('Compétences')
-    
+    df_costs_comp
     df = df_costs_comp
     range_level_min, range_level_max = build_chart_bar(df,'Level from','Cost','Coûts depuis le niveau:',int(1),int(30))
 
