@@ -423,7 +423,7 @@ pages = {
         st.Page(pg_mut, title='Mutation',icon="📊"),
     ],
     'Données':[ 
-        st.Page(pg_equip, title='Equipement',icon="🗂️"),
+        st.Page(pg_equip, title='Equipement Palmon',icon="🗂️"),
         st.Page(pg_equip_nov, title='Equipement novice',icon="🗂️"),
         st.Page(pg_boss, title='Boss',icon="🗂️"),
         st.Page(pg_total_costs, title='Coûts totaux', icon="🔐"),
