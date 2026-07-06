@@ -203,9 +203,10 @@ df_costs_boss = read_csv('data/ps_boss_costs.csv')
 df_equip_data = read_csv('data/ps_equip_costs.csv')
 df_equip_nov = read_csv('data/ps_equip_nov_costs.csv')
 
-menu_tab_val()
 df_costs_mut_full
 df_costs_stars
+
+menu_tab_val()
 
 if 1 == 2:
     df_costs_exp
