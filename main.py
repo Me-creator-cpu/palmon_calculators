@@ -260,6 +260,7 @@ def pg_total_costs():
 def pg_comp():
     global df_costs_comp
     st.subheader('Compétences')
+    df=df_costs_comp
     range_level_min, range_level_max = build_chart_bar(df,'Level from','Cost','Coûts depuis le niveau:',int(1),int(30))
     
     with st.container(horizontal_alignment="center", 
