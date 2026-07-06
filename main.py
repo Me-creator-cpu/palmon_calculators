@@ -87,6 +87,54 @@ def read_csv(file):
         df = None
     return df
 
+def build_chart_bar(df_chart,xField,yField,sLabel,selMin=1,selMax=30,with_slider=True, with_switch=False):
+    if df_chart is not None:
+        switch_axis = False
+        try:
+            if with_switch:
+                switch_axis = st.toggle('Switch axis')
+        except:
+            switch_axis = False
+        x_Field = xField
+        y_Field = yField
+        if switch_axis:
+            x_Field = yField
+            y_Field = xField            
+
+        if with_slider==True:
+            sel_min=selMin
+            sel_max=selMax
+            range_level_min, range_level_max= st.slider(
+                label=sLabel,
+                min_value=sel_min,
+                max_value=sel_max,
+                value=(sel_min,sel_max),
+                step=1
+            )
+            df2=df_chart[[xField,yField]]
+            df2['Selection']=df2.apply(lambda row: row[yField] if range_level_min <= row[xField] <= range_level_max else 0, axis=1)
+            
+            st.bar_chart(df2, x=x_Field, y=[y_Field,'Selection'], color=["#0068c9", "#ff4b4b"], stack=False)            
+            df = df_chart.loc[(df_chart[x_Field] >= int(range_level_min)) & (df_chart[x_Field] <= int(range_level_max))]
+            total_txt='Total Energy cost'
+            to_txt='to'
+            total_col = f"{total_txt} {range_level_min} {to_txt} {range_level_max}"
+            try:
+                st.markdown(f":orange-badge[{total_col} : {large_num_format(int(df[y_Field].sum()))}]")
+            except:
+                st.markdown(f":orange-badge[{total_col} : {int(df[y_Field].sum())}]")
+            excel_loaded=True
+            return range_level_min, range_level_max
+        else:
+            st.bar_chart(df_chart, x=x_Field, y=y_Field, stack=False)
+            df = df_chart.loc[(df_chart[xField] >= int(selMin)) & (df_chart[xField] <= int(selMax))]
+            total_txt='Total Crystals cost'
+            to_txt='to'
+            total_col = f"{total_txt} {selMin} {to_txt} {selMax}"
+            st.markdown(f":orange-badge[{total_col} : {int(df[yField].sum())}]")
+            return selMin,selMax
+
+
 df_costs_exp = read_csv('data/ps_pal_costs.csv')
 df_costs_comp = read_csv('data/ps_pal_comp_costs.csv')
 df_costs_mut = read_csv('data/ps_pal_mut_steps_costs.csv')
