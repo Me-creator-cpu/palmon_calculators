@@ -153,7 +153,7 @@ def build_table_any(df):
 
 def build_table_full_costs(df_src):
     df=df_src.copy()
-    df['Cost type']=df['Cost type'].apply(lambda b: option_values[data_values['Value'].index(b)]+' '+b)
+    df['Cost type']=df['Type'].apply(lambda b: option_values[data_values['Value'].index(b)]+' '+b)
     st.dataframe(
             df,
             column_config={
@@ -181,7 +181,7 @@ def menu_tab_val():
         st.subheader('Stars')
         df_stars=df_costs_stars.copy(deep=True)
         df_stars = df_stars[:-1]
-        df_stars['Stars level']=df_stars['Stars level'].apply(lambda b: format_stars(b) )
+        df_stars['Stars level']=df_stars['Stars'].apply(lambda b: format_stars(b) )
         df_stars.at['Total','Unit Cost']=df_stars['Unit Cost'].mean()
         df_stars.at['Total','Total']=df_stars['Total'].sum()
         df_stars.at['Total','Stars level']='Average / Total'
@@ -196,7 +196,7 @@ df_costs_boss = read_csv('data/ps_boss_costs.csv')
 df_equip_data = read_csv('data/ps_equip_costs.csv')
 df_equip_nov = read_csv('data/ps_equip_nov_costs.csv')
 
-#menu_tab_val()
+menu_tab_val()
 df_costs_mut_full
 df_costs_stars
 
