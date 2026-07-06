@@ -8,7 +8,6 @@ cols_mut = ['Level', 'Step', 'Substep', 'Cost level']
 cols_mut_full = ['Cost type', 'Cost']
 cols_stars = ['Stars level', 'Unit Cost', 'Total']
 cols_boss = ['Stars level', 'Unit Cost', 'Total']
-cols_boss_data = ['Name','Type', 'Level', 'Stars','Comp 1','Comp 2','Comp 3','Comp 4','Comp 5','URL']
 cols_equip = ['Level', 'Opus pearls']
 cols_equip_nov = ['Step', 'Name', 'Stars', 'Cost']
 
@@ -18,7 +17,6 @@ df_costs_mut=None
 df_costs_mut_full=None
 df_costs_stars=None
 df_costs_boss=None
-df_boss_data=None
 df_equip_data=None
 df_equip_nov=None
 
@@ -89,5 +87,21 @@ def read_csv(file):
         df = None
     return df
 
-df = read_csv('data/ps_pal_costs.csv')
-df
+df_costs_exp = read_csv('data/ps_pal_costs.csv')
+df_costs_comp = read_csv('data/ps_pal_comp_costs.csv')
+df_costs_mut = read_csv('data/ps_pal_mut_steps_costs.csv')
+df_costs_mut_full = read_csv('data/ps_pal_mut_costs.csv')
+df_costs_stars = read_csv('data/ps_pal_stars_costs.csv')
+df_costs_boss = read_csv('data/ps_boss_costs.csv')
+df_equip_data = read_csv('data/ps_equip_costs.csv')
+df_equip_nov = read_csv('data/ps_equip_nov_costs.csv')
+
+df_costs_exp
+df_costs_comp
+df_costs_mut
+df_costs_mut_full
+df_costs_stars
+df_costs_boss
+df_equip_data
+df_equip_nov
+
