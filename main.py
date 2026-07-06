@@ -127,7 +127,8 @@ def calcul_upgrade_costs(from_lvl=1,to_lvl=300):
         return None
 
 def calcul_upgrade_comp_costs(from_lvl=1,to_lvl=30,formated=True):
-    if get_df_idx(idx_palmon) is not None:
+    global df_costs_exp
+    if df_costs_exp is not None:
         val_cost=get_upgrade_comp_costs(from_lvl,to_lvl)
         if formated:
             return large_num_format(val_cost)
@@ -262,8 +263,7 @@ def pg_comp():
     df_costs_comp
     df = df_costs_comp
     range_level_min, range_level_max = build_chart_bar(df,'Level from','Cost','Coûts depuis le niveau:',int(1),int(30))
-
-    #df_pal=get_df_idx(idx_palmon)
+    
     with st.container(horizontal_alignment="center", 
                       vertical_alignment="center", 
                       border=True):
