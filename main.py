@@ -172,7 +172,7 @@ def build_table_full_costs(df_src):
          ) 
 
 def menu_tab_val():
-    global
+    global df_costs_mut_full,df_stars
     rowval = st.columns(2,border=False, width="stretch")
     with rowval[0]:
         st.subheader('Val') 
