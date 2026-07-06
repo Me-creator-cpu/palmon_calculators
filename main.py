@@ -30,7 +30,7 @@ map_values={"Energy":"🟢Energy",
             "Pieces":"🧩Pieces",
             "Level300":"🔝Level300" }
 
-col_stars=st.column_config.NumberColumn(
+col_stars=st.column_config.NumberColumn(    
         min_value=0,
         max_value=5,
         format="%d ⭐"
@@ -299,7 +299,7 @@ def pg_costs():
     df_pal=df_costs_exp
     df_pal
     st.subheader('Evolution')
-    min_upg=df_pal.loc[(df_pal["Level from"] >= 1)]["Level"].min()
+    min_upg=df_pal.loc[(df_pal["Level from"] >= 1)]["Level from"].min()
     max_upg=df.loc[(df["Cost"] >= 1)]["Level to"].max()
     range_level_min, range_level_max = build_chart_bar(df,'Level from','Cost','Coût depuis le niveau:',int(min_upg),int(max_upg))
     with st.container(horizontal_alignment="center", 
