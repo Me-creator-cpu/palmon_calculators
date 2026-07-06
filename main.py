@@ -24,6 +24,7 @@ data_values={
     "Value":["Energy","Crystals","Pieces","Level300"],
     "Icon":["🟢",     "💎",     "🧩",    "🔝"],
 }
+option_values=data_values['Icon']
 map_values={"Energy":"🟢Energy",
             "Crystals":"💎Crystals",
             "Pieces":"🧩Pieces",
