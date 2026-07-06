@@ -160,7 +160,7 @@ def build_table_any(df):
 
 def build_table_full_costs(df_src):
     df=df_src.copy()
-    df['Cost type']=df['Type'].apply(lambda b: option_values[data_values['Value'].index(b)]+' '+b)
+    df['Type']=df['Type'].apply(lambda b: option_values[data_values['Value'].index(b)]+' '+b)
     st.dataframe(
             df,
             column_config={
@@ -188,10 +188,10 @@ def menu_tab_val():
         st.subheader('Stars')
         df_stars=df_costs_stars.copy(deep=True)
         df_stars = df_stars[:-1]
-        df_stars['Stars level']=df_stars['Stars'].apply(lambda b: format_stars(b) )
-        df_stars.at['Total','Unit Cost']=df_stars['Unit Cost'].mean()
+        df_stars['Stars']=df_stars['Stars'].apply(lambda b: format_stars(b) )
+        df_stars.at['Total','Unit cost']=df_stars['Unit cost'].mean()
         df_stars.at['Total','Total']=df_stars['Total'].sum()
-        df_stars.at['Total','Stars level']='Average / Total'
+        df_stars.at['Total','Stars']='Average / Total'
         build_table_any(df_stars) 
 
 df_costs_exp = read_csv('data/ps_pal_costs.csv')
