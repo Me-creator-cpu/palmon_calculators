@@ -413,8 +413,8 @@ df_equip_nov = read_csv('data/ps_equip_nov_costs.csv')
 df_costs_mut_full = read_csv('data/ps_pal_mut_costs.csv')
 df_costs_stars = read_csv('data/ps_pal_stars_costs.csv')
 
-write_no_streamlit_link()
-write_js_menu()
+#write_no_streamlit_link()
+#write_js_menu()
 
 pages = {
     'Home':[ 
