@@ -81,3 +81,12 @@ def percent_format(value):
         return f"{ret:.2f}%"  # "12.34%"
     except:
         return empty()
+
+def read_csv(file):
+    try:
+        df = pd.read_csv('data.csv')
+    except:
+        df = None
+    return df
+
+read_csv('data/ps_pal_costs.csv')
